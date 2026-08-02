@@ -6,10 +6,20 @@
 <title>Brian2Tech — Full-Stack Design Studio</title>
 <meta name="description" content="Brian2Tech is a full-stack graphic design studio — brand systems, interfaces, and the production code that ships them.">
 
+<!-- Social preview (shown when the link is shared on LinkedIn, X, Slack, etc.)
+     PLACEHOLDER: update the og:url once your GitHub Pages URL is live -->
+<meta property="og:title" content="Brian2Tech — Full-Stack Design Studio">
+<meta property="og:description" content="Design it. Build it. Ship it.">
+<meta property="og:image" content="images/brian-photo.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="icon" type="image/png" href="images/favicon-32.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 </head>
 <body>
 
@@ -24,7 +34,7 @@
   <div class="nav-inner">
     <nav class="nav-glass">
       <a href="#top" class="logo" aria-label="Brian2Tech home">
-        <span class="logo-mark" aria-hidden="true"></span>
+        <img class="logo-mark" src="images/brian-logo.png" alt="" width="26" height="26">
         Brian2Tech
       </a>
 
@@ -256,6 +266,17 @@
             </div>
           </div>
         </div>
+
+        <div class="testimonial-card glass spotlight reveal">
+          <p class="testimonial-quote">The rebrand didn't just look sharper — it actually made our listings easier to manage day to day. Exactly the kind of practical thinking we needed.</p>
+          <div class="testimonial-person">
+            <div class="testimonial-avatar" aria-hidden="true">D</div>
+            <div>
+              <div class="testimonial-name">David Okonkwo</div>
+              <div class="testimonial-role">Principal, Northwind Real Estate</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -267,8 +288,7 @@
     <div class="wrap">
       <div class="about-grid">
         <div class="about-photo-frame reveal">
-          <!-- PLACEHOLDER: replace this div with <img src="your-photo.jpg" alt="Brian, founder of Brian2Tech"> -->
-          <div class="about-photo">[ PORTRAIT PHOTO ]</div>
+          <img class="about-photo" src="images/brian-photo.jpg" alt="Brian, founder of Brian2Tech" width="900" height="900" loading="lazy">
         </div>
         <div class="about-text reveal">
           <span class="eyebrow">About</span>
