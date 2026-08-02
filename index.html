@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brian2Tech — Full-Stack Design Studio</title>
+<meta name="description" content="Brian2Tech is a full-stack graphic design studio — brand systems, interfaces, and the production code that ships them.">
+
+<!-- Google Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (labels/data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS — edit these to re-theme the entire site
+   ============================================================ */
+:root{
+  /* ---- color: base surfaces ---- */
+  --bg-base:        #0a0e16;   /* deep charcoal-navy, not pure black */
+  --bg-base-2:      #0d1220;   /* slightly lifted panel behind sections */
+  --glass-fill:     rgba(255,255,255,0.045);
+  --glass-fill-hi:  rgba(255,255,255,0.08);   /* hover state fill */
+  --glass-border:   rgba(255,255,255,0.10);
+  --glass-border-hi:rgba(255,255,255,0.20);
+
+  /* ---- color: text ---- */
+  --text-primary:   #eef1f8;
+  --text-secondary: #9aa3b8;
+  --text-muted:     #616b83;
+
+  /* ---- color: accent gradient (teal -> indigo -> violet) ---- */
+  --accent-1:       #2dd4bf;
+  --accent-2:       #6366f1;
+  --accent-3:       #a855f7;
+  --accent-gradient: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
+  --accent-solid:   #6366f1;
+  --accent-glow:    rgba(99,102,241,0.45);
+
+  /* ---- type ---- */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* ---- layout ---- */
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --max-width: 1180px;
+  --blur: 18px;
+
+  /* ---- shadow ---- */
+  --shadow-panel: 0 8px 32px rgba(0,0,0,0.35);
+  --shadow-lift:  0 16px 48px rgba(0,0,0,0.45);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important;}
+}
+body{
+  background:var(--bg-base);
+  color:var(--text-primary);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  position:relative;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+ul{list-style:none;}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit;}
+
+/* visible keyboard focus states everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:2px solid var(--accent-1);
+  outline-offset:3px;
+  border-radius:4px;
+}
+
+.wrap{max-width:var(--max-width);margin:0 auto;padding:0 28px;}
+section{position:relative;padding:120px 0;}
+@media (max-width:768px){ section{padding:80px 0;} }
+
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--accent-1);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+}
+.eyebrow::before{
+  content:'';
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent-gradient);
+  box-shadow:0 0 10px var(--accent-glow);
+}
+
+h1,h2,h3{
+  font-family:var(--font-display);
+  font-weight:700;
+  letter-spacing:-0.02em;
+  line-height:1.08;
+}
+h2{font-size:clamp(28px,4vw,42px);margin-bottom:16px;}
+.section-sub{color:var(--text-secondary);font-size:16px;max-width:560px;margin-bottom:56px;}
+
+/* ambient background gradient orbs — very low opacity, purely decorative */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(90px);
+  pointer-events:none;
+  z-index:0;
+  opacity:0.16;
+}
+.orb-1{width:520px;height:520px;background:var(--accent-2);top:-160px;left:-120px;}
+.orb-2{width:460px;height:460px;background:var(--accent-3);top:40vh;right:-160px;}
+.orb-3{width:400px;height:400px;background:var(--accent-1);bottom:-140px;left:20vw;}
+
+/* generic glass panel */
+.glass{
+  background:var(--glass-fill);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));
+  box-shadow:var(--shadow-panel);
+  transition:transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+header{
+  position:sticky;top:0;z-index:100;
+  padding:16px 0;
+}
+.nav-inner{
+  max-width:var(--max-width);margin:0 auto;padding:0 28px;
+}
+.nav-glass{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;
+  background:rgba(10,14,22,0.55);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+.logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:19px;
+  letter-spacing:-0.01em;
+  display:flex;align-items:center;gap:9px;
+}
+.logo-mark{
+  width:26px;height:26px;border-radius:8px;
+  background:var(--accent-gradient);
+  display:inline-block;
+  box-shadow:0 0 16px var(--accent-glow);
+}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{
+  font-size:14.5px;color:var(--text-secondary);
+  transition:color 0.2s ease;
+  position:relative;
+}
+.nav-links a:hover{color:var(--text-primary);}
+.nav-right{display:flex;align-items:center;gap:16px;}
+
+.status-pill{
+  font-family:var(--font-mono);
+  font-size:12px;
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(45,212,191,0.08);
+  border:1px solid rgba(45,212,191,0.3);
+  color:var(--accent-1);
+  white-space:nowrap;
+}
+.status-pill .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent-1);
+  box-shadow:0 0 8px var(--accent-1);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+.nav-toggle{display:none;font-size:22px;color:var(--text-primary);}
+
+@media (max-width:860px){
+  .nav-links{
+    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    flex-direction:column;align-items:flex-start;
+    background:rgba(10,14,22,0.92);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    padding:20px;
+    gap:16px;
+    backdrop-filter:blur(20px);
+    display:none;
+  }
+  .nav-links.open{display:flex;}
+  .status-pill{display:none;}
+  .nav-toggle{display:block;}
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  padding-top:120px;
+  padding-bottom:100px;
+  display:grid;
+  grid-template-columns:1.15fr 0.85fr;
+  gap:56px;
+  align-items:center;
+}
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:70px;}
+}
+.hero h1{
+  font-size:clamp(36px,5.4vw,64px);
+  margin-bottom:22px;
+}
+.hero h1 .grad{
+  background:var(--accent-gradient);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero-sub{
+  font-size:17.5px;
+  color:var(--text-secondary);
+  max-width:520px;
+  margin-bottom:34px;
+}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 26px;
+  border-radius:14px;
+  font-size:14.5px;
+  font-weight:600;
+  transition:transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.btn-primary{
+  background:var(--accent-gradient);
+  color:#08090d;
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px var(--accent-glow);
+}
+.btn-ghost{
+  background:var(--glass-fill);
+  border:1px solid var(--glass-border);
+  color:var(--text-primary);
+}
+.btn-ghost:hover{
+  background:var(--glass-fill-hi);
+  border-color:var(--glass-border-hi);
+  transform:translateY(-2px);
+}
+
+/* floating hero stat card */
+.hero-card{
+  padding:26px;
+  position:relative;
+}
+.hero-card::before{
+  content:'';
+  position:absolute;inset:-1px;
+  border-radius:var(--radius-lg);
+  padding:1px;
+  background:var(--accent-gradient);
+  opacity:0.35;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.hero-card-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:18px;
+}
+.hero-card-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 0;
+  border-top:1px solid var(--glass-border);
+  font-size:14px;
+}
+.hero-card-row:first-of-type{border-top:none;}
+.hero-card-row span:first-child{color:var(--text-secondary);}
+.hero-card-row span:last-child{
+  font-family:var(--font-mono);
+  color:var(--text-primary);
+  font-weight:500;
+}
+.hero-card-row .live{color:var(--accent-1);}
+
+/* ============================================================
+   SERVICES — dashboard stat cards
+   ============================================================ */
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+@media (max-width:900px){ .services-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:600px){ .services-grid{grid-template-columns:1fr;} }
+
+.service-card{
+  padding:30px 26px;
+  cursor:default;
+}
+.service-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--glass-border-hi);
+  box-shadow:var(--shadow-lift), 0 0 0 1px rgba(99,102,241,0.15);
+}
+.service-icon{
+  width:44px;height:44px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(99,102,241,0.12);
+  border:1px solid rgba(99,102,241,0.25);
+  margin-bottom:20px;
+  color:var(--accent-1);
+}
+.service-card h3{font-size:18px;margin-bottom:10px;font-weight:600;}
+.service-card p{font-size:14.5px;color:var(--text-secondary);}
+
+/* ============================================================
+   WORK — filterable grid
+   ============================================================ */
+.filter-row{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;
+}
+.filter-btn{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  padding:9px 18px;
+  border-radius:999px;
+  border:1px solid var(--glass-border);
+  color:var(--text-secondary);
+  background:var(--glass-fill);
+  transition:all 0.25s ease;
+}
+.filter-btn:hover{color:var(--text-primary);border-color:var(--glass-border-hi);}
+.filter-btn.active{
+  color:#08090d;
+  background:var(--accent-gradient);
+  border-color:transparent;
+  font-weight:500;
+}
+
+.work-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+@media (max-width:760px){ .work-grid{grid-template-columns:1fr;} }
+
+.work-card{
+  overflow:hidden;
+  transition:transform 0.4s ease, opacity 0.4s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.work-card:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--shadow-lift);
+  border-color:var(--glass-border-hi);
+}
+.work-card.hidden{display:none;}
+
+.work-thumb{
+  /* PLACEHOLDER: swap this div's background for a real project screenshot,
+     e.g. background:url('images/project-nova.jpg') center/cover; */
+  height:200px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(45,212,191,0.25), transparent 60%),
+    radial-gradient(circle at 75% 80%, rgba(168,85,247,0.25), transparent 60%),
+    var(--bg-base-2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--text-muted);
+  letter-spacing:0.05em;
+  border-bottom:1px solid var(--glass-border);
+}
+.work-body{padding:24px;}
+.work-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.tag{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.06);
+  color:var(--text-secondary);
+  border:1px solid var(--glass-border);
+}
+.work-body h3{font-size:19px;margin-bottom:8px;}
+.work-body p{font-size:14px;color:var(--text-secondary);}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about-grid{
+  display:grid;
+  grid-template-columns:0.8fr 1.2fr;
+  gap:56px;
+  align-items:center;
+  margin-bottom:56px;
+}
+@media (max-width:860px){ .about-grid{grid-template-columns:1fr;} }
+
+.about-photo-frame{
+  border-radius:var(--radius-lg);
+  border:1px solid var(--glass-border);
+  padding:10px;
+  background:var(--glass-fill);
+  backdrop-filter:blur(var(--blur));
+}
+.about-photo{
+  /* PLACEHOLDER: replace with an actual headshot/portrait image */
+  aspect-ratio:4/5;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(99,102,241,0.35), transparent 60%),
+    var(--bg-base-2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--text-muted);
+}
+.about-text h2{margin-bottom:20px;}
+.about-text p{color:var(--text-secondary);font-size:15.5px;margin-bottom:16px;}
+
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+@media (max-width:760px){ .stats-row{grid-template-columns:repeat(2,1fr);} }
+
+.stat-card{padding:22px 18px;text-align:center;}
+.stat-num{
+  font-family:var(--font-display);
+  font-size:30px;
+  font-weight:700;
+  background:var(--accent-gradient);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin-bottom:6px;
+}
+.stat-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-panel{
+  padding:56px;
+  text-align:center;
+  max-width:760px;
+  margin:0 auto;
+}
+.contact-panel h2{margin-bottom:14px;}
+.contact-panel p{color:var(--text-secondary);margin-bottom:32px;font-size:16px;}
+.contact-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+
+@media (max-width:600px){ .contact-panel{padding:36px 24px;} }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{padding:44px 0;border-top:1px solid var(--glass-border);}
+.footer-inner{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.footer-links{display:flex;gap:26px;flex-wrap:wrap;}
+.footer-links a{font-size:13.5px;color:var(--text-secondary);transition:color 0.2s ease;}
+.footer-links a:hover{color:var(--accent-1);}
+.footer-copy{font-size:12.5px;color:var(--text-muted);font-family:var(--font-mono);}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal{
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<header>
+  <div class="nav-inner">
+    <nav class="nav-glass">
+      <a href="#top" class="logo" aria-label="Brian2Tech home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        Brian2Tech
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <span class="status-pill"><span class="dot" aria-hidden="true"></span>Available for hire</span>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <div class="wrap">
+    <section class="hero" style="padding-top:60px;">
+      <div>
+        <span class="eyebrow">Full-stack design studio</span>
+        <h1>Where pixels meet <span class="grad">production.</span></h1>
+        <p class="hero-sub">
+          <!-- PLACEHOLDER COPY: adjust positioning statement to match real service offering -->
+          Brian2Tech designs and builds brand systems, interfaces, and the
+          production-ready code that ships them — one integrated process,
+          from first sketch to deployed site.
+        </p>
+        <div class="cta-row">
+          <a href="#work" class="btn btn-primary">View Selected Work</a>
+          <a href="#contact" class="btn btn-ghost">Start a Project</a>
+        </div>
+      </div>
+
+      <div class="hero-card glass reveal">
+        <div class="hero-card-label">/// Studio status</div>
+        <div class="hero-card-row">
+          <span>Availability</span>
+          <span class="live">2 slots open</span>
+        </div>
+        <div class="hero-card-row">
+          <span>Avg. delivery</span>
+          <span>3–6 weeks</span>
+        </div>
+        <div class="hero-card-row">
+          <span>Based in</span>
+          <span>Remote / Worldwide</span>
+        </div>
+        <div class="hero-card-row">
+          <span>Next opening</span>
+          <span>Sept 2026</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       SERVICES
+       ============================================================ -->
+  <section id="services">
+    <div class="wrap">
+      <span class="eyebrow">What I do</span>
+      <h2 class="reveal">Design and development, under one roof.</h2>
+      <p class="section-sub reveal">
+        Every engagement covers the full path from concept to production —
+        no handoff gaps between the design file and the live product.
+      </p>
+
+      <div class="services-grid">
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2 L20 7 V17 L12 22 L4 17 V7 Z"/><path d="M12 8 L16 10.5 V15.5 L12 18 L8 15.5 V10.5 Z"/></svg>
+          </div>
+          <h3>Brand Identity</h3>
+          <p>Logo systems, visual language, and guidelines that hold up across every touchpoint.</p>
+        </div>
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>UI / UX Design</h3>
+          <p>Interfaces designed pixel-by-pixel, then validated against real usage patterns.</p>
+        </div>
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 6 3 12l5 6M16 6l5 6-5 6"/></svg>
+          </div>
+          <h3>Front-End Development</h3>
+          <p>Production-ready code — from vanilla HTML to modern frameworks — built from the same source as the design.</p>
+        </div>
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </div>
+          <h3>Design Systems</h3>
+          <p>Component libraries and tokens that keep design and code in sync as products grow.</p>
+        </div>
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+          </div>
+          <h3>Motion & Interaction</h3>
+          <p>Purposeful animation and micro-interactions that clarify, never decorate.</p>
+        </div>
+
+        <div class="service-card glass reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 17V7a2 2 0 0 1 2-2h9l5 5v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <h3>Web Applications</h3>
+          <p>Full-stack builds from concept to deployment, when a static site isn't enough.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SELECTED WORK
+       ============================================================ -->
+  <section id="work">
+    <div class="wrap">
+      <span class="eyebrow">Selected work</span>
+      <h2 class="reveal">Recent projects.</h2>
+      <p class="section-sub reveal">
+        A mix of brand launches, interface redesigns, and full builds —
+        filter by category to browse.
+      </p>
+
+      <div class="filter-row" role="group" aria-label="Filter projects by category">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="branding">Branding</button>
+        <button class="filter-btn" data-filter="web">Web Design</button>
+        <button class="filter-btn" data-filter="dev">Development</button>
+        <button class="filter-btn" data-filter="product">Product</button>
+      </div>
+
+      <div class="work-grid" id="workGrid">
+
+        <article class="work-card glass reveal" data-category="product web">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">UI/UX</span><span class="tag">Fintech</span></div>
+            <h3>Nova Finance</h3>
+            <p>Redesigned the onboarding flow, cutting signup drop-off by 38%.</p>
+          </div>
+        </article>
+
+        <article class="work-card glass reveal" data-category="branding">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">Branding</span><span class="tag">Packaging</span></div>
+            <h3>Lumen Coffee Co.</h3>
+            <p>Full identity system for a specialty roastery, from logo to packaging.</p>
+          </div>
+        </article>
+
+        <article class="work-card glass reveal" data-category="web dev">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">Web Design</span><span class="tag">Dev</span></div>
+            <h3>Arclight Studio</h3>
+            <p>Marketing site taken from Figma to production in three weeks.</p>
+          </div>
+        </article>
+
+        <article class="work-card glass reveal" data-category="product">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">Product</span><span class="tag">Dashboard</span></div>
+            <h3>Pulse Health</h3>
+            <p>Dashboard redesign for a health-tracking platform used by 40k+ patients.</p>
+          </div>
+        </article>
+
+        <article class="work-card glass reveal" data-category="branding web">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">Branding</span><span class="tag">Web Design</span></div>
+            <h3>Northwind Real Estate</h3>
+            <p>Brand refresh and listings platform for a boutique brokerage.</p>
+          </div>
+        </article>
+
+        <article class="work-card glass reveal" data-category="dev">
+          <div class="work-thumb">[ PROJECT SCREENSHOT — replace background ]</div>
+          <div class="work-body">
+            <div class="work-tags"><span class="tag">Dev</span><span class="tag">3D / WebGL</span></div>
+            <h3>Kaida Robotics</h3>
+            <p>Marketing and docs site with a custom WebGL hero for a robotics startup.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section id="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="about-photo-frame reveal">
+          <!-- PLACEHOLDER: replace this div with <img src="your-photo.jpg" alt="Brian, founder of Brian2Tech"> -->
+          <div class="about-photo">[ PORTRAIT PHOTO ]</div>
+        </div>
+        <div class="about-text reveal">
+          <span class="eyebrow">About</span>
+          <h2>Hi, I'm Brian.</h2>
+          <!-- PLACEHOLDER BIO — replace with real background and design philosophy -->
+          <p>
+            I'm the designer and developer behind Brian2Tech. I started out
+            designing visual identities, then taught myself to build the
+            interfaces I was designing — now I run projects end to end, so
+            nothing gets lost in translation between a mockup and a shipped
+            product.
+          </p>
+          <p>
+            I work with founders and small teams who want a single point of
+            contact for both the look and the build, and who'd rather move
+            fast with one person who understands both sides than coordinate
+            across three vendors.
+          </p>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card glass reveal">
+          <div class="stat-num">8+</div>
+          <div class="stat-label">Years experience</div>
+        </div>
+        <div class="stat-card glass reveal">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Projects completed</div>
+        </div>
+        <div class="stat-card glass reveal">
+          <div class="stat-num">45</div>
+          <div class="stat-label">Clients served</div>
+        </div>
+        <div class="stat-card glass reveal">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Design awards</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-panel glass reveal">
+        <span class="eyebrow">Get in touch</span>
+        <h2>Let's build something.</h2>
+        <p>
+          <!-- PLACEHOLDER: update contact email and platform links -->
+          Have a project in mind? Send a short brief and I'll reply within
+          24 hours with next steps.
+        </p>
+        <div class="contact-actions">
+          <a href="mailto:hello@brian2tech.com" class="btn btn-primary">hello@brian2tech.com</a>
+          <a href="https://cal.com/" class="btn btn-ghost" target="_blank" rel="noopener">Book a Call</a>
+          <a href="https://linkedin.com/" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="wrap footer-inner">
+    <span class="footer-copy">© <span id="year"></span> Brian2Tech. All rights reserved.</span>
+    <!-- PLACEHOLDER: update social / platform links -->
+    <div class="footer-links">
+      <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- footer year ----
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---- mobile nav toggle ----
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', function(){
+    var isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  navLinks.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ---- work filter ----
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var workCards = document.querySelectorAll('.work-card');
+  filterBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filterBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var filter = btn.getAttribute('data-filter');
+      workCards.forEach(function(card){
+        var cats = card.getAttribute('data-category');
+        var match = (filter === 'all') || cats.indexOf(filter) !== -1;
+        card.classList.toggle('hidden', !match);
+      });
+    });
+  });
+
+  // ---- scroll-triggered reveal (respects prefers-reduced-motion via CSS) ----
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion && 'IntersectionObserver' in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+  }
+})();
+</script>
+
+</body>
+</html>
