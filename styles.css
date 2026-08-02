@@ -160,9 +160,10 @@ header{position:sticky;top:0;z-index:100;padding:16px 0;}
 }
 .logo-mark{
   width:26px;height:26px;border-radius:8px;
-  background:var(--accent-gradient);
+  object-fit:cover;
   display:inline-block;
   box-shadow:0 0 16px var(--accent-glow);
+  border:1px solid var(--glass-border-hi);
 }
 .nav-links{display:flex;gap:32px;align-items:center;}
 .nav-links a{font-size:14.5px;color:var(--text-secondary);transition:color 0.2s ease;}
@@ -331,8 +332,8 @@ header{position:sticky;top:0;z-index:100;padding:16px 0;}
 /* ============================================================
    TESTIMONIALS
    ============================================================ */
-.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-@media (max-width:900px){ .testimonial-grid{grid-template-columns:1fr;} }
+.testimonial-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+@media (max-width:700px){ .testimonial-grid{grid-template-columns:1fr;} }
 
 .testimonial-card{padding:28px;display:flex;flex-direction:column;height:100%;}
 .testimonial-quote{
@@ -362,10 +363,11 @@ header{position:sticky;top:0;z-index:100;padding:16px 0;}
   padding:10px;background:var(--glass-fill);backdrop-filter:blur(var(--blur));
 }
 .about-photo{
+  width:100%;
   aspect-ratio:4/5;border-radius:16px;
-  background:radial-gradient(circle at 30% 30%, rgba(99,102,241,0.35), transparent 60%), var(--bg-base-2);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-mono);font-size:12px;color:var(--text-muted);
+  object-fit:cover;
+  object-position:center 20%;
+  background:var(--bg-base-2);
 }
 .about-text h2{margin-bottom:20px;}
 .about-text p{color:var(--text-secondary);font-size:15.5px;margin-bottom:16px;}
