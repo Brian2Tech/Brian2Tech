@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — Brian2Tech</title>
+<meta name="description" content="Case study — Brian2Tech, full-stack design studio.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<header>
+  <div class="nav-inner">
+    <nav class="nav-glass">
+      <a href="index.html" class="logo" aria-label="Brian2Tech home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        Brian2Tech
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#work">Work</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="index.html#testimonials">Testimonials</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <span class="status-pill"><span class="dot" aria-hidden="true"></span>Available for hire</span>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- Rendered by script below. If the ?id= param doesn't match a
+         project, a "not found" state is shown instead. -->
+    <div id="projectRoot"></div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span class="footer-copy">© <span id="year"></span> Brian2Tech. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     PROJECT DATA
+     To add a new project: add an entry here with a unique key,
+     then link to it from index.html as project.html?id=your-key
+     ============================================================ */
+  var PROJECTS = {
+    "nova-finance": {
+      title: "Nova Finance",
+      tagline: "Redesigning onboarding for a consumer fintech app.",
+      tags: ["UI/UX", "Fintech"],
+      client: "Nova Finance",
+      year: "2025",
+      role: "Product design + front-end build",
+      overview: "Nova Finance came to us with a signup flow that was losing more than half of new users before they finished creating an account. The brief was simple: find out why, and fix it without a full rebuild.",
+      challenge: "The existing flow asked for financial details before users understood the product's value. Screens were dense, error states were unclear, and there was no way to save progress and return later.",
+      approach: "We restructured the flow around a single question per screen, moved account verification to the end, and added inline validation with plain-language error messages. Every screen was prototyped and tested with real users before a line of production code was written.",
+      results: [
+        { num: "38%", label: "Drop-off reduced" },
+        { num: "2.1x", label: "Faster completion" },
+        { num: "4 wks", label: "Design to launch" }
+      ],
+      gallery: 4,
+      prev: "kaida-robotics",
+      next: "lumen-coffee"
+    },
+    "lumen-coffee": {
+      title: "Lumen Coffee Co.",
+      tagline: "A full identity system for a specialty roastery.",
+      tags: ["Branding", "Packaging"],
+      client: "Lumen Coffee Co.",
+      year: "2024",
+      role: "Brand identity + packaging design",
+      overview: "Lumen was launching as a specialty roastery with no existing brand. They needed an identity that could work on a coffee bag, a delivery van, and a café sign — and feel consistent across all three.",
+      challenge: "Specialty coffee branding tends to look the same across the category — hand-lettered marks, muted earth tones. Lumen wanted to stand apart while still reading as premium and trustworthy.",
+      approach: "We built the identity around a warm, high-contrast palette and a custom wordmark with a distinct 'L' motif that could work as a standalone icon. Packaging used a modular label system so new roasts could launch without redesigning the whole line.",
+      results: [
+        { num: "12", label: "Packaging SKUs launched" },
+        { num: "1", label: "Cohesive system" },
+        { num: "6 wks", label: "Concept to print" }
+      ],
+      gallery: 4,
+      prev: "nova-finance",
+      next: "arclight-studio"
+    },
+    "arclight-studio": {
+      title: "Arclight Studio",
+      tagline: "Marketing site, from Figma file to production.",
+      tags: ["Web Design", "Dev"],
+      client: "Arclight Studio",
+      year: "2025",
+      role: "Web design + front-end development",
+      overview: "Arclight had a design file for their new marketing site but no one to build it. We took the existing direction, refined it, and shipped a fully responsive, production-ready site.",
+      challenge: "The original design wasn't built with real content or responsive behavior in mind — several sections would have broken on mobile or with longer copy.",
+      approach: "We audited the design system, fixed spacing and type scale inconsistencies, and rebuilt every section to hold up across breakpoints and real content lengths, then handed off clean, documented code.",
+      results: [
+        { num: "3 wks", label: "Design to live site" },
+        { num: "98", label: "Lighthouse performance" },
+        { num: "100%", label: "Mobile responsive" }
+      ],
+      gallery: 4,
+      prev: "lumen-coffee",
+      next: "pulse-health"
+    },
+    "pulse-health": {
+      title: "Pulse Health",
+      tagline: "Dashboard redesign for a health-tracking platform.",
+      tags: ["Product", "Dashboard"],
+      client: "Pulse Health",
+      year: "2024",
+      role: "Product design",
+      overview: "Pulse Health's patient dashboard had grown feature by feature over three years with no consistent system, making it hard for patients to find what mattered.",
+      challenge: "Clinicians and patients used the same dashboard for very different tasks, and the existing layout treated every metric with equal visual weight — nothing stood out.",
+      approach: "We introduced a clear information hierarchy, grouped related metrics into scannable cards, and ran the redesign past real patients before finalizing. Rollout was gradual, with the old and new dashboards running side by side during testing.",
+      results: [
+        { num: "40k+", label: "Active patients" },
+        { num: "31%", label: "Faster task completion" },
+        { num: "4.7/5", label: "Post-launch satisfaction" }
+      ],
+      gallery: 4,
+      prev: "arclight-studio",
+      next: "northwind-realestate"
+    },
+    "northwind-realestate": {
+      title: "Northwind Real Estate",
+      tagline: "Brand refresh and listings platform for a boutique brokerage.",
+      tags: ["Branding", "Web Design"],
+      client: "Northwind Real Estate",
+      year: "2025",
+      role: "Brand refresh + web platform",
+      overview: "Northwind had an outdated brand and a listings site that couldn't keep up with their growing inventory. We refreshed both together so they'd feel like one product.",
+      challenge: "The old brand didn't match the caliber of properties Northwind was now listing, and the listings site required manual updates for every new property.",
+      approach: "We refreshed the wordmark and palette, then built a listings platform with a simple content system so the team could add properties themselves without touching code.",
+      results: [
+        { num: "60%", label: "Faster listing updates" },
+        { num: "1", label: "Unified brand system" },
+        { num: "5 wks", label: "Full delivery" }
+      ],
+      gallery: 4,
+      prev: "pulse-health",
+      next: "kaida-robotics"
+    },
+    "kaida-robotics": {
+      title: "Kaida Robotics",
+      tagline: "Marketing and docs site with a custom WebGL hero.",
+      tags: ["Dev", "3D / WebGL"],
+      client: "Kaida Robotics",
+      year: "2025",
+      role: "Front-end development",
+      overview: "Kaida needed a marketing site that could show off their hardware without relying on video, plus a documentation section for their developer partners.",
+      challenge: "Static product photography wasn't communicating how the hardware actually moved, and the docs needed to be easy for the internal team to update without a CMS.",
+      approach: "We built an interactive WebGL hero that let visitors rotate a 3D model of the product, and a lightweight docs system built from versioned markdown files.",
+      results: [
+        { num: "2.4x", label: "Time on page" },
+        { num: "0", label: "CMS dependencies" },
+        { num: "5 wks", label: "Design to launch" }
+      ],
+      gallery: 4,
+      prev: "northwind-realestate",
+      next: "nova-finance"
+    }
+  };
+
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var project = id ? PROJECTS[id] : null;
+  var root = document.getElementById('projectRoot');
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  if (!project) {
+    root.innerHTML =
+      '<div class="not-found reveal">' +
+        '<span class="eyebrow">404</span>' +
+        '<h1>Project not found</h1>' +
+        '<p>The project you\'re looking for doesn\'t exist or may have moved.</p>' +
+        '<a href="index.html#work" class="btn btn-primary">Back to work</a>' +
+      '</div>';
+  } else {
+    document.title = project.title + ' — Brian2Tech';
+
+    var tagsHtml = project.tags.map(function (t) { return '<span class="tag">' + escapeHtml(t) + '</span>'; }).join('');
+    var resultsHtml = project.results.map(function (r) {
+      return '<div class="project-result"><span class="project-result-label">' + escapeHtml(r.label) + '</span><span class="project-result-num">' + escapeHtml(r.num) + '</span></div>';
+    }).join('');
+    var galleryHtml = '';
+    for (var i = 0; i < project.gallery; i++) {
+      galleryHtml += '<div class="project-gallery-item">[ IMAGE ' + (i + 1) + ' — replace background ]</div>';
+    }
+    var prevProject = PROJECTS[project.prev];
+    var nextProject = PROJECTS[project.next];
+
+    root.innerHTML =
+      '<section class="project-hero">' +
+        '<a href="index.html#work" class="breadcrumb reveal">&larr; Back to work</a>' +
+        '<div class="reveal">' +
+          '<div class="work-tags" style="margin-bottom:16px;">' + tagsHtml + '</div>' +
+          '<h1>' + escapeHtml(project.title) + '</h1>' +
+          '<p class="project-hero-sub">' + escapeHtml(project.tagline) + '</p>' +
+        '</div>' +
+        '<div class="project-meta-row reveal">' +
+          '<div class="project-meta-item"><div class="project-meta-label">Client</div><div class="project-meta-value">' + escapeHtml(project.client) + '</div></div>' +
+          '<div class="project-meta-item"><div class="project-meta-label">Year</div><div class="project-meta-value">' + escapeHtml(project.year) + '</div></div>' +
+          '<div class="project-meta-item"><div class="project-meta-label">Role</div><div class="project-meta-value">' + escapeHtml(project.role) + '</div></div>' +
+        '</div>' +
+        '<div class="project-hero-image reveal">[ PROJECT HERO IMAGE — replace background ]</div>' +
+      '</section>' +
+
+      '<section style="padding-top:0;">' +
+        '<div class="project-content-grid">' +
+          '<div class="project-body reveal">' +
+            '<h2>Overview</h2><p>' + escapeHtml(project.overview) + '</p>' +
+            '<h2>The challenge</h2><p>' + escapeHtml(project.challenge) + '</p>' +
+            '<h2>The approach</h2><p>' + escapeHtml(project.approach) + '</p>' +
+            '<h2>Gallery</h2>' +
+            '<p style="font-size:13px;color:var(--text-muted);margin-bottom:0;">Placeholder tiles below — replace each with a real project screenshot.</p>' +
+            '<div class="project-gallery">' + galleryHtml + '</div>' +
+          '</div>' +
+          '<div class="reveal">' +
+            '<div class="project-sidebar-card glass">' +
+              '<h3>Results</h3>' +
+              resultsHtml +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="project-nav-links reveal">' +
+          (prevProject ? '<a class="project-nav-link" href="project.html?id=' + project.prev + '">&larr; ' + escapeHtml(prevProject.title) + '</a>' : '<span></span>') +
+          (nextProject ? '<a class="project-nav-link" href="project.html?id=' + project.next + '">' + escapeHtml(nextProject.title) + ' &rarr;</a>' : '<span></span>') +
+        '</div>' +
+      '</section>';
+
+    // re-run reveal/spotlight setup for the newly injected content
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var newReveals = root.querySelectorAll('.reveal');
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      newReveals.forEach(function (el, i) {
+        el.style.transitionDelay = Math.min(i * 60, 240) + 'ms';
+        obs.observe(el);
+      });
+    } else {
+      newReveals.forEach(function (el) { el.classList.add('visible'); });
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
